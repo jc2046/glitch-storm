@@ -187,6 +187,55 @@ ISR(TIMER1_COMPA_vect) {
       cTop = 6;
       cBottom = 0;
       break;
+          case 17:
+    // pulse drone
+      aTop = 32;
+      aBottom = 1;
+      bTop = 24;
+      bBottom = 0;
+      cTop = 16;
+      cBottom = 0;
+      value = ((t*a) & ( t>>5| t<<2 )  ) | ( (t*b) & ( t>>4 | t<<3)) | ((t*c)/2 & ( t>>3 | t<<4 ) );
+      // kills a nano 
+      // (t*8 & (t/24>>5|t<<2)) | (t*6 & (t/18>>4|t<<3)) | (t*4 & (t/12>>3|t<<4))
+      break;
+    case 18:
+    // drone, organ, perc
+      aTop = 8;
+      aBottom = 1;
+      bTop = 16;
+      bBottom = 1;
+      cTop = 8;
+      cBottom = 1;
+      value= ( ( t * a & t >> 4 ) | ( t * b & t >> 7 ) | ( t * c &  t) ) - 1;
+      // nah :)
+      //(1/(128000-t))|(t>96e3)?t%4000*("'&(&*$,*"[t%96000/4000]-a):(t%2000*("$$$&%%%''''%%%'&"[t%32000/2000]-b-(2*((t>28e3)&(t<32e3)))))/(1+(t%8000<4e3));
+      break;
+    case 19:
+    // also a drone, basic with perc blurbs
+      aTop = 16;
+      aBottom = 4;
+      bTop = 16;
+      bBottom = 3;
+      cTop = 16;
+      cBottom = 1;
+      value =  ( t >> a | t - b ) & ( t -a | t >> b ) * c;   
+      break;
+    case 20:
+    // a melodic drone
+      aTop = 16;
+      aBottom = 8;
+      bTop = 14;
+      bBottom = 7;
+      cTop = 12;
+      cBottom = 6;
+      //value = ((t>>32)*7|(t>>a)*8|(t>>b)*7)&(t>>7); 
+      // 
+      value = t - b & ( (t>>a | t<<4 ) ) ^ t - c & ( ( t>>b | t<<3 ) ) ^ t - a & ( ( t>>c | t<<2 ) ) ;
+      
+      //( (  (t/6) >> a &t) + ( t << 4) ) & ( ( ( ( t/3 ) >> b & t) + ( t << c) ) );
+      break;
+
 
   }
 
